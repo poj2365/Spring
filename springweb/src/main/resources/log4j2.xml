@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<Configuration> <!--xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+               xmlns="https://logging.apache.org/xml/ns"
+               xsi:schemaLocation="https://logging.apache.org/xml/ns
+                       https://logging.apache.org/xml/ns/log4j-config-2.xsd>-->
+
+    <!--  출력하는 방식을 설정하는 태그  -->
+    <Appenders>
+        <!--  콘솔창에 출력하는 appender  -->
+        <Console name="console">
+            <PatternLayout pattern="[%-5p] %d{yyyy-MM-dd HH:mm:ss} : (%l) - %m %n"/>
+            <!--<JsonTemplateLayout eventTemplateUri="classpath:mylayout.json"/>-->
+        </Console>
+        <!--  로그내용 파일로 출력하기  -->
+        <RollingFile name="rollingFile" fileName="logs/spring-log.log" filePattern="logs/log-%d{yyyy-mm-dd}.log">
+            <PatternLayout pattern="[%-5p] %d{yyyy-MM-dd HH:mm:ss} : (%l) - %m %n"/>
+            <!--<JsonTemplateLayout eventTemplateUri="classpath:mylayout.json"/>-->
+            <Policies>
+                <!-- 하루 한개 파일 생성 -->
+                <TimeBasedTriggeringPolicy interval="24"/>
+                <SizeBasedTriggeringPolicy size="10MB"/>
+            </Policies>
+        </RollingFile>
+        <Console name="sqlLogger">
+            <PatternLayout pattern="%m%n"/>
+        </Console>
+    </Appenders>
+    <Loggers>
+        <Logger name="jdbc.sqlonly" additivity="false" level="INFO">
+            <AppenderRef ref="sqlLogger"/>
+        </Logger>
+        <Logger name="jdbc.resultsettable" additivity="false" level="INFO">
+            <AppenderRef ref="sqlLogger"/>
+        </Logger>
+        <Logger name="com.bs.spring" level="debug">
+            <AppenderRef ref="rollingFile"/>
+        </Logger>
+        <Logger name="org.springframework.context" level="INFO"/>
+        <Logger name="org.springframework.core" level="INFO"/>
+        <Logger name="org.springframework.web" level="INFO"/>
+        <Logger name="org.springframework.beans" level="INFO"/>
+        <Root level="WARN">
+            <AppenderRef ref="console"/>
+        </Root>
+    </Loggers>
+</Configuration>
